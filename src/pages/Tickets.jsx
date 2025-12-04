@@ -339,7 +339,7 @@ const Tickets = () => {
               setSelectedUser(null);
             }}
           >
-            Users
+            Developers
           </button>
         )}
       </div>
@@ -398,7 +398,7 @@ const Tickets = () => {
           {/* If Users tab selected (for admin), show user list and user detail card */}
           {loggedInUser?.role === "admin" && activeNav === "users" ? (
             <div>
-              <h2 style={{ margin: "20px 0 10px" }}>Users</h2>
+              <h2 style={{ margin: "20px 0 10px" }}>Developers</h2>
               <div className="users-list-bestui">
                 {users && users.length ? (
                   users.map((user, idx) => (
