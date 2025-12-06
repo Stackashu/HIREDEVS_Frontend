@@ -231,6 +231,13 @@ const Tickets = () => {
         title: "",
         description: "",
       });
+      console.log("data", data);
+      if (data.success) {
+        alert("Ticket created successfully");
+        fetchTickets();
+      } else {
+        alert(data.message || "Failed to create ticket");
+      }
       // Optionally: await fetchTickets() here for instant update
     } catch (error) {
       console.error("error", error);
@@ -271,9 +278,21 @@ const Tickets = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    async function checkUser() {
+      let user = await localStorage.getItem("user");
+      user = await JSON.parse(user);
+      setLoggedInUser(user);
+      if (!user) {
+        navigate("/login");
+      }
+    }
+    checkUser();
+    if (loggedInUser?.role === "admin") {
+      fetchUsers();
+    }
   }, []);
-
+ 
+  // will fetch all the developers only for the admin 
   const fetchUsers = async () => {
     try {
       const token = await localStorage.getItem("token");
