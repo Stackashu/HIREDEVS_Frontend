@@ -1,133 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import Card from "../Components/Card";
+import Input from "../Components/Input";
+import Button from "../Components/Button";
+import { TECHNOLOGIES } from "../constants";
 import "../styles/Signup.css";
-
-const TECHNOLOGIES = [
-  // Frontend
-  "React",
-  "Vue",
-  "Angular",
-  "Svelte",
-  "Next.js",
-  "Gatsby",
-  "Redux",
-  // Backend
-  "Node.js",
-  "Express",
-  "Django",
-  "Flask",
-  "FastAPI",
-  "Spring Boot",
-  "Ruby on Rails",
-  "ASP.NET",
-  // Full Stack / Stacks
-  "MERN",
-  "MEAN",
-  "LAMP",
-  "JAMstack",
-  "PERN",
-  // Python Libraries
-  "NumPy",
-  "Pandas",
-  "SciPy",
-  "Matplotlib",
-  "Seaborn",
-  // Machine Learning
-  "scikit-learn",
-  "TensorFlow",
-  "Keras",
-  "PyTorch",
-  "XGBoost",
-  "LightGBM",
-  "CatBoost",
-  // Deep Learning
-  "OpenCV",
-  "Caffe",
-  "Theano",
-  "CNTK",
-  "MXNet",
-  // Data Science / Analytics
-  "Jupyter",
-  "Google Colab",
-  "Tableau",
-  "Power BI",
-  "Plotly",
-  // Databases
-  "MongoDB",
-  "MySQL",
-  "PostgreSQL",
-  "SQLite",
-  "Oracle",
-  "Firebase",
-  "Redis",
-  // DevOps
-  "Docker",
-  "Kubernetes",
-  "Jenkins",
-  "Travis CI",
-  "AWS",
-  "Azure",
-  "GCP",
-  "GitHub Actions",
-  // Cybersecurity
-  "Metasploit",
-  "Wireshark",
-  "Nmap",
-  "Burp Suite",
-  "Kali Linux",
-  "John the Ripper",
-  "Snort",
-  "Nessus",
-  // Web Technologies
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "TypeScript",
-  "Bootstrap",
-  "Tailwind CSS",
-  "Sass",
-  "Webpack",
-  "Babel",
-  // Mobile
-  "React Native",
-  "Flutter",
-  "Swift",
-  "Kotlin",
-  "Android",
-  "iOS",
-  // Cloud/Serverless
-  "AWS Lambda",
-  "Firebase Functions",
-  "Heroku",
-  "Netlify",
-  "Vercel",
-  // Others
-  "GraphQL",
-  "REST API",
-  "Socket.io",
-  "RabbitMQ",
-  "Elasticsearch",
-  "Solr",
-  "Kafka",
-  "Git",
-  "Linux",
-  "Shell Scripting",
-  "C",
-  "C++",
-  "Java",
-  "Go",
-  "Rust",
-  "PHP",
-  "Perl",
-  "Scala",
-  // Visualization/Reporting
-  "D3.js",
-  "ECharts",
-  // Security/Authentication
-  "OAuth",
-  "JWT",
-  "OpenID Connect",
-];
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -142,7 +19,7 @@ const Signup = () => {
   const handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    if (name == "role") {
+    if (name === "role") {
       value = value.toLowerCase();
     }
     setForm({ ...form, [name]: value });
@@ -156,9 +33,7 @@ const Signup = () => {
         `${import.meta.env.VITE_SERVER_URL}/v1/auth/signup`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         }
       );
@@ -167,26 +42,17 @@ const Signup = () => {
       if (res.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        console.log("res", data);
         navigate("/");
       } else {
         alert(data.message || "signup failed");
       }
     } catch (error) {
-      console.error("Error occurred ", error.message);
       alert("Something went wrong");
     } finally {
       setLoading(false);
     }
-    setForm({
-      email: "",
-      password: "",
-      skills: [],
-      role: "user",
-    });
   };
 
-  // Helper to remove a skill from selection
   const handleRemoveSkill = (skill) => {
     setForm((prev) => ({
       ...prev,
@@ -195,176 +61,131 @@ const Signup = () => {
   };
 
   return (
-    <div className="signup-outer">
-      <div className="signup-inner">
-        <div className="signup-content">
-          <h2 className="signup-title" style={{ textAlign: "center", marginBottom: 18 }}>
-            Signup
-          </h2>
-          <form className="signup-form" onSubmit={handleSignup} autoComplete="off">
-            <div className="signup-form-group">
-              <label htmlFor="email" className="signup-label">
-                Email
+    <div className="signup-page">
+      {/* Background Ambience */}
+      <div className="auth-background-text">HIREDEVS</div>
+      <div className="auth-blob blob-1"></div>
+      <div className="auth-blob blob-2"></div>
+
+      <Card padding="medium" className="signup-card">
+        <h2 className="signup-title">
+          Create Account
+        </h2>
+
+        <form onSubmit={handleSignup} autoComplete="off" className="signup-form">
+          <Input
+            id="email"
+            type="text"
+            label="Email"
+            placeholder="Enter your email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+
+          <Input
+            id="password"
+            type="password"
+            label="Password"
+            placeholder="Choose a password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            autoComplete="new-password"
+          />
+
+          <div className="signup-form-group">
+            <span className="signup-section-label">Register as</span>
+            <div className="signup-role-group">
+              <label className={`radio-card ${form.role === 'user' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="role"
+                  value="user"
+                  checked={form.role === "user"}
+                  onChange={handleChange}
+                  className="hidden-radio"
+                />
+                <span className="radio-label">User</span>
               </label>
-              <input
-                id="email"
-                type="text"
-                placeholder="Enter your email id"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                className="signup-input"
-                autoComplete="email"
-                required
-              />
-            </div>
-
-            <div className="signup-form-group">
-              <label htmlFor="password" className="signup-label">
-                Password
+              <label className={`radio-card ${form.role === 'moderator' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="role"
+                  value="moderator"
+                  checked={form.role === "moderator"}
+                  onChange={handleChange}
+                  className="hidden-radio"
+                />
+                <span className="radio-label">Developer</span>
               </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                className="signup-input"
-                autoComplete="new-password"
-                required
-              />
             </div>
+          </div>
 
-            <div className="signup-role-section">
-              <div className="signup-form-group">
-                <span className="signup-role-title" style={{ fontWeight: 500 }}>
-                  Register as
-                </span>
-              </div>
-              <div style={{ display: "flex", gap: "1.5rem" }}>
-                <label className="signup-role-label" style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="user"
-                    checked={form.role === "user"}
-                    onChange={handleChange}
-                    className="signup-radio"
-                  />
-                  User
-                </label>
-                <label className="signup-role-label" style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="moderator"
-                    checked={form.role === "moderator"}
-                    onChange={handleChange}
-                    className="signup-radio"
-                  />
-                  Developer
-                </label>
+          <div className="signup-form-group">
+            <label className="signup-section-label" htmlFor="skills">
+              Select Skills (optional)
+            </label>
+            <div className="skills-select-wrapper">
+              <select
+                id="skills"
+                name="skills"
+                value={form.skills}
+                onChange={(e) => {
+                  const selected = Array.from(e.target.selectedOptions).map(o => o.value);
+                  setForm(prev => ({ ...prev, skills: selected }));
+                }}
+                multiple
+                className="skills-select"
+              >
+                {TECHNOLOGIES.map((tech, idx) => (
+                  <option key={idx} value={tech}>
+                    {tech}
+                  </option>
+                ))}
+              </select>
+              <div className="skills-hint">
+                Ctrl+Click to select multiple
               </div>
             </div>
 
-            <div className="signup-skills-section" style={{ marginTop: 18 }}>
-              <label className="signup-label" htmlFor="skills">
-                Select Skills (optional)
-              </label>
-              <div className="signup-select-wrapper">
-                <select
-                  id="skills"
-                  name="skills"
-                  value={form.skills}
-                  onChange={(e) => {
-                    const selected = Array.from(e.target.selectedOptions).map(
-                      (option) => option.value
-                    );
-                    setForm({ ...form, skills: selected });
-                  }}
-                  multiple
-                  className="signup-skills-select"
-                >
-                  {TECHNOLOGIES.map((tech, idx) => (
-                    <option key={idx} value={tech} className="signup-skill-option">
-                      {tech}
-                    </option>
-                  ))}
-                </select>
+            {form.skills.length > 0 && (
+              <div className="skills-chips-container">
+                {form.skills.map((sk, idx) => (
+                  <span key={idx} className="skill-chip">
+                    {sk}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSkill(sk)}
+                      className="chip-remove"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
               </div>
-              <div className="signup-skills-selected">
-                {Array.isArray(form.skills) && form.skills.length > 0
-                  ? (
-                    <div className="signup-skills-list">
-                      {form.skills.map((sk, idx) => (
-                        <span
-                          key={idx}
-                          className="signup-skill-chip"
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            background: "#eef2fb",
-                            color: "#2952a5",
-                            borderRadius: "16px",
-                            padding: "5px 12px",
-                            margin: "6px 8px 0 0",
-                            fontSize: 14,
-                            fontWeight: 500,
-                          }}
-                        >
-                          {sk}
-                          <button
-                            type="button"
-                            aria-label={`Remove ${sk}`}
-                            style={{
-                              border: "none",
-                              background: "none",
-                              marginLeft: 7,
-                              cursor: "pointer",
-                              color: "#b41d39",
-                              fontSize: 16,
-                              fontWeight: "bold",
-                              lineHeight: "1",
-                            }}
-                            onClick={() => handleRemoveSkill(sk)}
-                            tabIndex={0}
-                          >
-                            ×
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  )
-                  : null}
-              </div>
-            </div>
+            )}
+          </div>
 
-            <button
-              type="submit"
-              className="signup-submit-btn"
-              disabled={loading}
-              style={{
-                marginTop: 24,
-                width: "100%",
-                padding: "9px 0",
-                fontWeight: 600,
-                fontSize: "1.1rem",
-                background: "#3250cd",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                boxShadow: "0 1px 6px rgba(32,52,120,0.08)",
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.8 : 1,
-                transition: "all 0.17s",
-              }}
-            >
-              {loading ? "Signing up..." : "Sign up"}
-            </button>
-          </form>
-        </div>
-      </div>
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={loading}
+            className="signup-submit-btn"
+          >
+            Sign Up
+          </Button>
+
+          <div className="signup-footer">
+            Already have an account?{' '}
+            <Link to="/login" className="signup-link">
+              Login
+            </Link>
+          </div>
+        </form>
+      </Card>
     </div>
   );
 };

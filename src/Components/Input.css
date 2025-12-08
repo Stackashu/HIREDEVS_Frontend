@@ -1,0 +1,63 @@
+.ui-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.ui-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: 2px;
+}
+
+.ui-input-wrapper {
+  position: relative;
+}
+
+.ui-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.ui-input:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.ui-input::placeholder {
+  color: var(--text-muted);
+}
+
+.ui-input.has-error {
+  border-color: var(--color-error);
+}
+
+.ui-input.has-error:focus {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.ui-description {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.ui-error-message {
+  font-size: 0.8rem;
+  color: var(--color-error);
+  animation: slide-down 0.2s ease-out;
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

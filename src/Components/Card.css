@@ -1,0 +1,14 @@
+.ui-card {
+  background: var(--bg-surface-glass);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.padding-none { padding: 0; }
+.padding-small { padding: 1rem; }
+.padding-medium { padding: 2rem; }
+.padding-large { padding: 3rem; }

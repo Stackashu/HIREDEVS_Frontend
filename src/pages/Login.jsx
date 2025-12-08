@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import "../styles/Login.css"
+import React, { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom';
+import Card from '../Components/Card';
+import Input from '../Components/Input';
+import Button from '../Components/Button';
+import "../styles/Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,6 +12,20 @@ const Login = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+
+  // User Added: Backend connection test
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const res = await fetch(`https://hiredevs-backend-152a.onrender.com/`);
+        // this is just for testing and starting the backend server 
+        console.log("Backend Wake-up:", res.status);
+      } catch (error) {
+        console.error("Failed to connect to backend:", error);
+      }
+    };
+    init();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -31,7 +48,7 @@ const Login = () => {
 
       const data = await res.json();
 
-      if(res.ok){
+      if (res.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/");
@@ -46,119 +63,59 @@ const Login = () => {
   };
 
   return (
-    <div className="login-outer">
-      <div className="login-inner">
-        <div className="login-content">
-          <form className="login-form" onSubmit={handleLogin} style={{
-            background: "#fff",
-            padding: "32px 28px 28px 28px",
-            borderRadius: "9px",
-            boxShadow: "0 2px 22px rgba(60, 81, 180, 0.06)",
-            minWidth: 340,
-            maxWidth: 370,
-            margin: "0 auto",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center"
-          }}>
-            <h2 style={{
-              marginBottom: "30px",
-              fontWeight: 700,
-              color: "#2643a5",
-              fontSize: "2rem",
-              letterSpacing: "1px",
-              textAlign: "center"
-            }}>
-              Login
-            </h2>
-            <div style={{ width: "100%", marginBottom: "22px" }}>
-              <label
-                htmlFor="email"
-                style={{
-                  display: "block",
-                  marginBottom: 7,
-                  fontWeight: 500,
-                  fontSize: 14,
-                  color: "#253466"
-                }}>
-                Email
-              </label>
-              <input
-                type="text"
-                name="email"
-                id="email"
-                placeholder="Enter your email"
-                className="login-input"
-                value={form.email}
-                onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "9px 12px",
-                  borderRadius: "6px",
-                  border: "1px solid #c7cff3",
-                  fontSize: 15,
-                  marginBottom: 0,
-                  outline: "none",
-                }}
-                autoComplete="email"
-              />
-            </div>
-            <div style={{ width: "100%", marginBottom: "26px" }}>
-              <label
-                htmlFor="password"
-                style={{
-                  display: "block",
-                  marginBottom: 7,
-                  fontWeight: 500,
-                  fontSize: 14,
-                  color: "#253466"
-                }}>
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Enter your password"
-                className="login-input"
-                value={form.password}
-                onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "9px 12px",
-                  borderRadius: "6px",
-                  border: "1px solid #c7cff3",
-                  fontSize: 15,
-                  marginBottom: 0,
-                  outline: "none",
-                }}
-                autoComplete="current-password"
-              />
-            </div>
-            <button
-              className="login-button"
-              type="submit"
-              disabled={loading}
-              style={{
-                width: "100%",
-                background: "#3250cd",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                fontWeight: 600,
-                fontSize: "1.08rem",
-                padding: "11px 0",
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.85 : 1,
-                boxShadow: "0 1px 6px rgba(32,52,120,0.08)",
-                transition: "all 0.17s"
-              }}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
-          </form>
-        </div>
-      </div>
+    <div className="login-page">
+      {/* Background Ambience */}
+      <div className="auth-background-text">HIREDEVS</div>
+      <div className="auth-blob blob-1"></div>
+      <div className="auth-blob blob-2"></div>
+
+      <Card padding="medium" className="login-card">
+        <h2 className="login-title">
+          Welcome Back
+        </h2>
+
+        <form onSubmit={handleLogin} className="login-form">
+          <Input
+            label="Email"
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            autoComplete="email"
+          />
+
+          <Input
+            label="Password"
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            autoComplete="current-password"
+          />
+
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={loading}
+            className="login-submit-btn"
+          >
+            Login
+          </Button>
+
+          <div className="login-footer">
+            Don't have an account?{' '}
+            <Link to="/signup" className="login-link">
+              Sign up
+            </Link>
+          </div>
+        </form>
+      </Card>
     </div>
   )
 }
